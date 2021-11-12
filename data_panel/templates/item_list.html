@@ -1,0 +1,236 @@
+{% extends "base.html" %}
+{% load bootstrap_pagination %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <div class="container-lg p-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span>Вы вошли под логином: <strong>{{ user.username }}</strong></span>
+                    <a class="btn btn-primary px-4" href="/sign-out">Выйти</a>
+                </div>
+            </div>
+        </div>
+
+        {# Filters #}
+        <div class="card mt-4">
+            <div class="card-body">
+                <h4>Фильтры</h4>
+                <hr/>
+                <form method="get">
+                    <label for="id_price">Цена без скидки:</label>
+                    <div class="input-group mb-3" id="id_price">
+                        <div class="input-group-prepend"><span class="input-group-text">От</span></div>
+                        <input
+                                type="number"
+                                name="price__gt"
+                                step="any"
+                                class="numberinput form-control" id="id_price__gt"
+                                value="{{ request.GET.price__gt }}"
+                        >
+                        <div class="input-group-prepend"><span class="input-group-text">До</span></div>
+                        <input
+                                type="number"
+                                name="price__lt"
+                                step="any"
+                                class="numberinput form-control" id="id_price__lt"
+                                value="{{ request.GET.price__lt }}"
+                        >
+                    </div>
+
+                    <label for="id_price_with_discount">Цена со скидкой:</label>
+                    <div class="input-group mb-3" id="id_price_with_discount">
+                        <div class="input-group-prepend"><span class="input-group-text">От</span></div>
+                        <input
+                                type="number"
+                                name="price_with_discount__gt"
+                                step="any"
+                                class="numberinput form-control" id="id_price_with_discount__gt"
+                                value="{{ request.GET.price_with_discount__gt }}"
+                        >
+                        <div class="input-group-prepend"><span class="input-group-text">До</span></div>
+                        <input
+                                type="number"
+                                name="price_with_discount__lt"
+                                step="any"
+                                class="numberinput form-control" id="id_price_with_discount__lt"
+                                value="{{ request.GET.price_with_discount__lt }}"
+                        >
+                    </div>
+
+                    <label for="id_rating">Рейтинг:</label>
+                    <div class="input-group mb-3" id="id_rating">
+                        <div class="input-group-prepend"><span class="input-group-text">От</span></div>
+                        <input
+                                type="number"
+                                name="rating__gt"
+                                step="any"
+                                class="numberinput form-control" id="id_rating__gt"
+                                value="{{ request.GET.rating__gt }}"
+                        >
+                        <div class="input-group-prepend"><span class="input-group-text">До</span></div>
+                        <input
+                                type="number"
+                                name="rating__lt"
+                                step="any"
+                                class="numberinput form-control" id="id_rating__lt"
+                                value="{{ request.GET.rating__lt }}"
+                        >
+                    </div>
+
+                    <label for="id_reviews">Количество отзывов:</label>
+                    <div class="input-group mb-3" id="id_reviews">
+                        <div class="input-group-prepend"><span class="input-group-text">От</span></div>
+                        <input
+                                type="number"
+                                name="reviews__gt"
+                                step="any"
+                                class="numberinput form-control" id="id_reviews__gt"
+                                value="{{ request.GET.reviews__gt }}"
+                        >
+                        <div class="input-group-prepend"><span class="input-group-text">До</span></div>
+                        <input
+                                type="number"
+                                name="reviews__lt"
+                                step="any"
+                                class="numberinput form-control" id="id_reviews__lt"
+                                value="{{ request.GET.reviews__lt }}"
+                        >
+                    </div>
+
+                    <label for="id_revenue">Выручка:</label>
+                    <div class="input-group mb-3" id="id_revenue">
+                        <div class="input-group-prepend"><span class="input-group-text">От</span></div>
+                        <input
+                                type="number"
+                                name="revenue__gt"
+                                step="any"
+                                class="numberinput form-control" id="id_revenue__gt"
+                                value="{{ request.GET.revenue__gt }}"
+                        >
+                        <div class="input-group-prepend"><span class="input-group-text">До</span></div>
+                        <input
+                                type="number"
+                                name="revenue__lt"
+                                step="any"
+                                class="numberinput form-control" id="id_revenue__lt"
+                                value="{{ request.GET.revenue__lt }}"
+                        >
+                    </div>
+
+                    <div class="d-flex justify-content-end">
+                        <input type="submit" class="btn btn-primary" value="Применить"/>
+                        <a href="/" class="btn btn-secondary ml-2">Сбросить</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {# Table #}
+        <div class="card mt-4">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        {% for theader in table_headers %}
+                            <th scope="col" class="border-0 bg-light p-0">
+                                <div class="d-flex align-items-center justify-content-center">
+                                    {% if theader.active %}
+                                        <a class="btn btn-primary w-100" href="{{ theader.url }}">
+                                            <span class="font-weight-bold">{{ theader.name }}</span>
+                                            {% if theader.down %}
+                                                <small class="ml-1 mb-1">
+                                                    <i class="fa fa-chevron-down"></i>
+                                                </small>
+                                            {% else %}
+                                                <small class="ml-1 mb-1">
+                                                    <i class="fa fa-chevron-up"></i>
+                                                </small>
+                                            {% endif %}
+                                        </a>
+                                    {% else %}
+                                        <a class="btn btn-light w-100 {# text-uppercase #}" href="{{ theader.url }}">
+                                            <span class="font-weight-bold">{{ theader.name }}</span>
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </th>
+                        {% endfor %}
+                    </thead>
+                    <tbody>
+                    {% for item in page_obj.object_list %}
+                        <tr>
+                            <th scope="row" class="border-0 p-0">
+                                <div class="p-2 d-flex align-items-center">
+                                    <img src="{{ item.image_url }}" alt="{{ item.name }}"
+                                         class="img-fluid rounded shadow-sm" style="max-width: 75px;"/>
+                                    <div class="ml-3 d-inline-block">
+                                <span class="mb-0">
+                                    <a href="{{ item.url }}"
+                                       class="text-dark d-inline-block align-middle">
+                                        {% if item.name %}{{ item.name }}{% else %}—{% endif %}
+                                    </a>
+                                </span>
+                                        <span class="text-muted font-weight-normal font-italic d-block">
+                                            Артикул:{{ ' ' }}{% if item.vendor_code %}{{ item.vendor_code }}{% else %}
+                                            —{% endif %}
+                                        </span>
+                                    </div>
+                                </div>
+                            </th>
+                            <td class="border-0 align-middle text-center">
+                                {% if item.brand %}{{ item.brand }}{% else %}—{% endif %}
+                            </td>
+                            <td class="border-0 align-middle text-center">
+                                {% if item.provider %}{{ item.provider }}{% else %}—{% endif %}
+                            </td>
+                            <td class="border-0 align-middle text-center">
+                                <i class="fa fa-star text-warning"></i>
+                                {% if item.rating %}{{ item.rating }}{% else %}0{% endif %}
+                            </td>
+                            <td class="border-0 align-middle text-center">
+                                {% if item.reviews %}{{ item.reviews }} шт.{% else %}—{% endif %}
+                            </td>
+                            <td class="border-0 align-middle text-center">
+                                <span>
+                                    {% if item.price_with_discount %}
+                                        {{ item.price_with_discount }}
+                                    {% else %}—{% endif %}
+                                </span>
+                                {% if item.price %}
+                                    <span class="text-danger"><small><i><s>{{ item.price }}</s></i></small></span>
+                                {% endif %}
+                            </td>
+
+                            <td class="border-0 align-middle text-center">
+                                {% if item.quantity %}{{ item.quantity }} шт.{% else %}—{% endif %}
+                            </td>
+
+                            <td class="border-0 align-middle text-center">
+                                {% if item.categories %}{{ item.categories }}{% else %}—{% endif %}
+                            </td>
+
+                            <td class="border-0 align-middle text-center">
+                                {% if item.quantity_of_purchased %}{{ item.quantity_of_purchased }} шт.{% else %}
+                                    —{% endif %}
+                            </td>
+
+                            <td class="border-0 align-middle text-center">
+                                {% if item.revenue %}{{ item.revenue }}{% else %}—{% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        {# Pagination #}
+        {% if page_obj.has_other_pages %}
+            <div class="mt-4">
+                {% bootstrap_paginate page_obj range=10 extra_pagination_classes="justify-content-center"%}
+            </div>
+        {% endif %}
+    </div>
+{% endblock content %}

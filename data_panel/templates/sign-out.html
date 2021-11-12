@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="container mt-4 pb-4">
+        <div class="card">
+            <div class="card-body">
+                <h2>Вы успешно вышли</h2>
+                <div class="border-top pt-3">
+                    <small class="text-muted">
+                        <a href="{% url 'sign-in' %}">Войти снова</a>
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
