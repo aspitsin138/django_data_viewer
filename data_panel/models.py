@@ -1,4 +1,19 @@
 from django.db import models
+from django.contrib.auth.models import User
+
+
+class Subscription(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name="Пользователь")
+    valid_until = models.DateField(verbose_name="Подписка действует до")
+    is_trial = models.BooleanField(verbose_name="Пробная версия", default=True)
+    is_active = models.BooleanField(verbose_name="Подписка активна", default=True)
+
+    def __str__(self):
+        return f"{self.user.username} subscription"
+
+    class Meta:
+        verbose_name = "Подписка на сервис"
+        verbose_name_plural = "Подписки на сервис"
 
 
 class Provider(models.Model):
