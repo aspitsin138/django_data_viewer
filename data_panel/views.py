@@ -1,17 +1,18 @@
 import json
 import re
 
+from django.conf import settings
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import F
 from django.http import QueryDict, HttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django_filters.views import FilterView
-from django.db.models import F
-from django.conf import settings
 
 from .filters import ItemFilter
 from .forms import UserRegisterForm
-from .models import Item
+from .models import Item, Brand, Category, Provider, ItemUrl
 
 
 def register(request):
@@ -35,7 +36,6 @@ def add_goods(request):
             data = json.loads(request.body)
 
             request_key = data.pop('API_KEY', None)
-
             if request_key != settings.API_KEY:
                 return HttpResponse(status=403)
 
@@ -43,14 +43,42 @@ def add_goods(request):
                 if value == "":
                     data[key] = None
 
+            if data['url']:
+                data['url'] = ItemUrl.objects.get_or_create(url=data['url'])[0]
+            else:
+                del data['url']
+
+            if data['brand']:
+                data['brand'] = Brand.objects.get_or_create(name=data['brand'])[0]
+            else:
+                del data['brand']
+
+            if data['provider']:
+                data['provider'] = Provider.objects.get_or_create(name=data['provider'])[0]
+            else:
+                del data['provider']
+
+            categories = []
+
+            if data['categories']:
+                for cg in data['categories'].split("/"):
+                    categories.append(Category.objects.get_or_create(name=cg.strip())[0])
+            del data['categories']
+
             item = Item(**data)
             item.save()
+            item.categories.set(categories)
             return HttpResponse(status=200, content="OK")
         except Exception as e:
             print(e)
             return HttpResponse(status=406)
     else:
         return HttpResponse(status=405)
+
+
+@login_required
+def billing(request):
+    return render(request, 'billing.html')
 
 
 class ItemListView(LoginRequiredMixin, FilterView):

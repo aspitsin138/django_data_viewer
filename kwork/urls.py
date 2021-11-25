@@ -27,9 +27,10 @@ logout_view = auth_views.LogoutView.as_view(template_name='sign-out.html')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('billing/', panel_views.billing, name="billing"),
     path('sign-in/', login_view, name="sign-in"),
     path('sign-up/', panel_views.register, name="sign-up"),
     path('sign-out/', logout_view, name="sign-out"),
-    path('private-api/goods/add', panel_views.add_goods),
+    path('api/goods/add', panel_views.add_goods),
     path('', panel_views.ItemListView.as_view(), name="index"),
 ]

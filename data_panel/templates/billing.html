@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="container mt-4 pb-4">
+        <div class="card">
+            <div class="card-body">
+                <h2>Состояние подписки</h2>
+                <div class="border-top pt-3">
+                    Активирована пробная версия подписки, которая будет активна до <strong>23.12.2021</strong>
+                </div>
+                <a class="btn btn-info px-4 mt-2" href="#">Купить подписку</a>
+                <a class="btn btn-warning px-4 mt-2" href="{% url 'index' %}">К товарам</a>
+                <a class="btn btn-primary px-4 mt-2" href="{% url 'sign-out' %}">Выйти</a>
+            </div>
+        </div>
+        <div class="card mt-3">
+            <div class="card-body">
+                <h2 class="mb-3">История платежей</h2>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Дата</th>
+                            <th scope="col">Тип операции</th>
+                            <th scope="col">Сумма</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>24.11.2021</td>
+                            <td>Пополнение счёта</td>
+                            <th class="text-success">+175</th>
+                        </tr>
+                        <tr>
+                            <td>24.11.2021</td>
+                            <td>Пополнение счёта</td>
+                            <th class="text-success">+175</th>
+                        </tr>
+                        <tr>
+                            <td>24.11.2021</td>
+                            <td>Пополнение счёта</td>
+                            <th class="text-success">+175</th>
+                        </tr>
+                        <tr>
+                            <td>24.11.2021</td>
+                            <td>Пополнение счёта</td>
+                            <th class="text-success">+175</th>
+                        </tr>
+                        <tr>
+                            <td>24.11.2021</td>
+                            <td>Пополнение счёта</td>
+                            <th class="text-success">+175</th>
+                        </tr>
+                        <tr>
+                            <td>24.11.2021</td>
+                            <td>Пополнение счёта</td>
+                            <th class="text-success">+175</th>
+                        </tr>
+                        <tr>
+                            <td>24.11.2021</td>
+                            <td>Пополнение счёта</td>
+                            <th class="text-success">+175</th>
+                        </tr>
+                        <tr>
+                            <td>24.11.2021</td>
+                            <td>Пополнение счёта</td>
+                            <th class="text-success">+175</th>
+                        </tr>
+                        <tr>
+                            <td>24.11.2021</td>
+                            <td>Пополнение счёта</td>
+                            <th class="text-success">+175</th>
+                        </tr>
+                        <tr>
+                            <td>24.11.2021</td>
+                            <td>Пополнение счёта</td>
+                            <th class="text-success">+175</th>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
