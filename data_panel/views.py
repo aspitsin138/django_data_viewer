@@ -13,6 +13,7 @@ from django_filters.views import FilterView
 from .filters import ItemFilter
 from .forms import UserRegisterForm
 from .models import Item, Brand, Category, Provider, ItemUrl
+from .mixins import SubscriptionRequiredMixin
 
 
 def register(request):
@@ -81,7 +82,7 @@ def billing(request):
     return render(request, 'billing.html')
 
 
-class ItemListView(LoginRequiredMixin, FilterView):
+class ItemListView(LoginRequiredMixin, SubscriptionRequiredMixin, FilterView):
     template_name = 'item_list.html'
     paginate_by = 25
     model = Item
