@@ -28,7 +28,7 @@ API_KEY = os.environ.get("API_KEY")
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG").lower() == "true"
+DEBUG = os.environ.get("DEBUG", "false").lower() == "true"
 
 ALLOWED_HOSTS = ["80.78.240.233", "localhost"]
 
@@ -93,7 +93,7 @@ DATABASES = {
     }
 }
 
-if os.environ.get("USE_SQLITE").lower() == "true":
+if os.environ.get("USE_SQLITE", "true").lower() == "true":
     DATABASES['default'] = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',

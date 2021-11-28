@@ -6,3 +6,4 @@ waitress
 python-dotenv
 psycopg2
 requests
+gunicorn
