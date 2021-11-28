@@ -19,6 +19,20 @@ class Subscription(models.Model):
         verbose_name_plural = "Подписки на сервис"
 
 
+class PaymentsInfo(models.Model):
+    user = models.ForeignKey(User, null=True, verbose_name="Пользователь", on_delete=models.SET_NULL)
+    status = models.CharField(max_length=20, verbose_name="Статус платежа")
+    amount = models.IntegerField(verbose_name="Сумма")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"[{self.id}] {self.user.username}'s payment "
+
+    class Meta:
+        verbose_name = "Платёж"
+        verbose_name_plural = "Платежи"
+
+
 class Provider(models.Model):
     name = models.CharField(max_length=300, unique=True, null=True, blank=True, verbose_name="Поставщик")
 

@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
-from django.urls import path
+from django.urls import path, include
 
 from data_panel import views as panel_views
 
@@ -31,6 +31,6 @@ urlpatterns = [
     path('sign-in/', login_view, name="sign-in"),
     path('sign-up/', panel_views.register, name="sign-up"),
     path('sign-out/', logout_view, name="sign-out"),
-    path('api/goods/add', panel_views.add_goods),
+    path('api/', include('api.urls')),
     path('', panel_views.ItemListView.as_view(), name="index"),
 ]

@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'data_panel.apps.DataPanelConfig',
+    'api.apps.ApiConfig',
     'crispy_forms',
     'bootstrap_pagination',
     'django_filters'
@@ -144,3 +145,10 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 LOGIN_URL = "sign-in"
 LOGIN_REDIRECT_URL = "index"
+
+TINKOFF_TERMINAL_KEY = os.environ.get("TINKOFF_TERMINAL_KEY")
+TINKOFF_TERMINAL_PASSWORD = os.environ.get("TINKOFF_TERMINAL_PASSWORD")
+TINKOFF_PAYMENT_CALLBACK_URL = os.environ.get("TINKOFF_PAYMENT_CALLBACK_URL")
+TINKOFF_PAYMENT_SUCCESS_URL = os.environ.get("TINKOFF_PAYMENT_SUCCESS_URL")
+
+SUBSCRIPTION_PRICE = os.environ.get("SUBSCRIPTION_PRICE")
