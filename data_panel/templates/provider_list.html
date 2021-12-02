@@ -136,38 +136,12 @@
         <div class="card mt-4">
             <div class="card-body">
                 <div class="d-flex justify-content-around" style="height: 300px;">
-                    <div style="width: 100%">
-                        <canvas id="chart1"></canvas>
-                    </div>
-                    <div style="width: 100%">
-                        <canvas id="chart2"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="card mt-4">
-            <div class="card-body">
-                <div class="d-flex justify-content-around" style="height: 300px;">
-                    <div style="width: 100%">
-                        <canvas id="chart3"></canvas>
-                    </div>
-                    <div style="width: 100%">
-                        <canvas id="chart4"></canvas>
-                    </div>
+                    <div style="width: 100%"><canvas id="chart1"></canvas></div>
+                    <div style="width: 100%"><canvas id="chart2"></canvas></div>
                 </div>
             </div>
         </div>
         <script src="{% static 'charts.js' %}"></script>
-        <script>
-            axios.get('/api/chart/categories').then(response => {
-                createChart('chart1', 'Продажи', response.data.chart1)
-                createChart('chart2', 'Выручка', response.data.chart2)
-            });
-            axios.get('/api/chart/providers').then(response => {
-                createChart('chart3', 'Продажи', response.data.chart1)
-                createChart('chart4', 'Выручка', response.data.chart2)
-            });
-        </script>
 
         {# Table #}
         <div class="card mt-4">
@@ -211,30 +185,35 @@
                                 <span class="mb-0">
                                     <a href="{{ item.url }}"
                                        class="text-dark d-inline-block align-middle">
-                                        {{ item.name|default_if_none:"—" }}
+                                        {% if item.name %}{{ item.name }}{% else %}—{% endif %}
                                     </a>
                                 </span>
                                         <span class="text-muted font-weight-normal font-italic d-block">
-                                            Артикул:{{ ' ' }}{{ item.vendor_code|default_if_none:"—" }}
+                                            Артикул:{{ ' ' }}{% if item.vendor_code %}{{ item.vendor_code }}{% else %}
+                                            —{% endif %}
                                         </span>
                                     </div>
                                 </div>
                             </th>
                             <td class="border-0 align-middle text-center">
-                                {{ item.brand|default_if_none:"—" }}
+                                {% if item.brand %}{{ item.brand }}{% else %}—{% endif %}
                             </td>
                             <td class="border-0 align-middle text-center">
-                                {{ item.provider|default_if_none:"—" }}
+                                {% if item.provider %}{{ item.provider }}{% else %}—{% endif %}
                             </td>
                             <td class="border-0 align-middle text-center">
                                 <i class="fa fa-star text-warning"></i>
-                                {{ item.rating|default_if_none:"0" }}
+                                {% if item.rating %}{{ item.rating }}{% else %}0{% endif %}
                             </td>
                             <td class="border-0 align-middle text-center">
                                 {% if item.reviews %}{{ item.reviews }} шт.{% else %}—{% endif %}
                             </td>
                             <td class="border-0 align-middle text-center">
-                                <span>{{ item.price_with_discount|default_if_none:"—" }}</span>
+                                <span>
+                                    {% if item.price_with_discount %}
+                                        {{ item.price_with_discount }}
+                                    {% else %}—{% endif %}
+                                </span>
                                 {% if item.price %}
                                     <span class="text-danger"><small><i><s>{{ item.price }}</s></i></small></span>
                                 {% endif %}
@@ -254,7 +233,7 @@
                             </td>
 
                             <td class="border-0 align-middle text-center">
-                                {{ item.revenue|default_if_none:"—" }}
+                                {% if item.revenue %}{{ item.revenue }}{% else %}—{% endif %}
                             </td>
                         </tr>
                     {% endfor %}

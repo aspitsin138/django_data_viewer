@@ -9,6 +9,7 @@ from django_filters.views import FilterView
 
 from .filters import ItemFilter
 from .forms import UserRegisterForm
+from .helpers import get_item_query
 from .mixins import SubscriptionRequiredMixin
 from .models import Item
 
@@ -37,6 +38,8 @@ class ItemListView(LoginRequiredMixin, SubscriptionRequiredMixin, FilterView):
     paginate_by = 25
     model = Item
     filterset_class = ItemFilter
+
+    queryset = get_item_query()
 
     def get_context_data(self, **kwargs):
         table_headers = [

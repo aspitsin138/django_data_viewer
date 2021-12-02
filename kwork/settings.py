@@ -93,6 +93,7 @@ DATABASES = {
     }
 }
 
+
 if os.environ.get("USE_SQLITE", "true").lower() == "true":
     DATABASES['default'] = {
         'ENGINE': 'django.db.backends.sqlite3',

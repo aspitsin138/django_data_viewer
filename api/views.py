@@ -6,13 +6,14 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 
 from api.tinkoff import generate_token, init_payment
-from data_panel.models import PaymentsInfo, ItemUrl, Brand, Provider, Category, Item
+from data_panel.helpers import get_chart_data
+from data_panel.models import PaymentsInfo, Brand, Provider, Category, Item, ItemUrl
 
 
 @csrf_exempt
@@ -109,3 +110,18 @@ def add_goods(request):
     else:
         return HttpResponse(status=405)
 
+
+@login_required
+def categories_chart_data(request):
+    return JsonResponse({
+        "chart1": get_chart_data("categories", "quantity_of_purchased", many_to_many=True),
+        "chart2": get_chart_data("categories", "revenue", many_to_many=True)
+    })
+
+
+@login_required
+def provider_chart_data(request):
+    return JsonResponse({
+        "chart1": get_chart_data("provider", "quantity_of_purchased"),
+        "chart2": get_chart_data("provider", "revenue")
+    })
