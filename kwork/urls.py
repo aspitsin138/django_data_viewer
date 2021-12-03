@@ -16,24 +16,15 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.contrib.auth import views as auth_views
 from django.urls import path, include
 
 from data_panel import views as panel_views
 
-login_view = auth_views.LoginView.as_view(
-    template_name='sign-in.html',
-    redirect_authenticated_user=True
-)
-logout_view = auth_views.LogoutView.as_view(template_name='sign-out.html')
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('billing/', panel_views.billing, name="billing"),
-    path('sign-in/', login_view, name="sign-in"),
-    path('sign-up/', panel_views.register, name="sign-up"),
-    path('sign-out/', logout_view, name="sign-out"),
     path('api/', include('api.urls')),
+    path('accounts/', include('allauth.urls')),
     path('', panel_views.ItemListView.as_view(), name="index"),
 ]
 

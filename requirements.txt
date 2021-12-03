@@ -6,4 +6,5 @@ waitress
 python-dotenv
 psycopg2
 requests
+django-allauth
 gunicorn

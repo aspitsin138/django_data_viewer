@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
 from pathlib import Path
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -35,18 +36,31 @@ ALLOWED_HOSTS = ["80.78.240.233", "localhost", "kwork-test.herokuapp.com"]
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
     'django.contrib.auth',
+    'django.contrib.messages',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'django.contrib.admin',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.messages',
     'django.contrib.staticfiles',
     'data_panel.apps.DataPanelConfig',
     'api.apps.ApiConfig',
     'crispy_forms',
     'bootstrap_pagination',
-    'django_filters'
+    'django_filters',
 ]
+
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -63,7 +77,7 @@ ROOT_URLCONF = 'kwork.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates', 'allauth')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -92,7 +106,6 @@ DATABASES = {
         'PORT': os.environ.get("DB_PORT", "5432"),
     }
 }
-
 
 if os.environ.get("USE_SQLITE", "true").lower() == "true":
     DATABASES['default'] = {
@@ -144,7 +157,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-LOGIN_URL = "sign-in"
+ACCOUNT_ACTIVATION_DAYS = 1
+REGISTRATION_AUTO_LOGIN = True
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = True
+ACCOUNT_AUTHENTICATION_METHOD = "username_email"
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_BLACKLIST = ["admin", "administrator", "moderator", "superuser"]
+
+LOGIN_URL = "account_login"
 LOGIN_REDIRECT_URL = "index"
 
 TINKOFF_TERMINAL_KEY = os.environ.get("TINKOFF_TERMINAL_KEY")
@@ -153,3 +174,9 @@ TINKOFF_PAYMENT_CALLBACK_URL = os.environ.get("TINKOFF_PAYMENT_CALLBACK_URL")
 TINKOFF_PAYMENT_SUCCESS_URL = os.environ.get("TINKOFF_PAYMENT_SUCCESS_URL")
 
 SUBSCRIPTION_PRICE = os.environ.get("SUBSCRIPTION_PRICE")
+
+EMAIL_HOST = os.environ.get("EMAIL_HOST")
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+EMAIL_USE_TLS = True

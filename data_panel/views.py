@@ -4,11 +4,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import F
 from django.http import QueryDict
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django_filters.views import FilterView
 
 from .filters import ItemFilter
-from .forms import UserRegisterForm
 from .helpers import get_item_query
 from .mixins import SubscriptionRequiredMixin
 from .models import Item
@@ -17,20 +16,6 @@ from .models import Item
 @login_required
 def billing(request):
     return render(request, 'billing.html')
-
-
-def register(request):
-    if request.user.is_authenticated:
-        return redirect('index')
-
-    if request.method == 'POST':
-        form = UserRegisterForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('sign-in')
-    else:
-        form = UserRegisterForm()
-    return render(request, 'sign-up.html', {'form': form})
 
 
 class ItemListView(LoginRequiredMixin, SubscriptionRequiredMixin, FilterView):

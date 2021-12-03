@@ -19,8 +19,3 @@ function createChart(chartId, chartTitle, chartData) {
     };
     return new Chart(ctx, config)
 }
-
-axios.get('/api/chart').then(response => {
-    createChart('chart1', 'Продажи', response.data.chart1)
-    createChart('chart2', 'Выручка', response.data.chart2)
-});
