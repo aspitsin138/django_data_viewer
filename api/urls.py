@@ -15,3 +15,4 @@ urlpatterns = [
     path('chart/providers', provider_chart_data),
     path('chart/categories', categories_chart_data),
 ]
+
