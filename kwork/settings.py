@@ -31,7 +31,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG", "false").lower() == "true"
 
-ALLOWED_HOSTS = ["whattosell.ru", "localhost", "kwork-test.herokuapp.com"]
+ALLOWED_HOSTS = ["whattosell.ru", "80.78.240.233", "localhost", "127.0.0.1", "::1"]
 
 # Application definition
 
@@ -162,7 +162,6 @@ REGISTRATION_AUTO_LOGIN = True
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = True
 ACCOUNT_AUTHENTICATION_METHOD = "username_email"
-ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_BLACKLIST = ["admin", "administrator", "moderator", "superuser"]
 
 LOGIN_URL = "account_login"
@@ -176,7 +175,8 @@ TINKOFF_PAYMENT_SUCCESS_URL = os.environ.get("TINKOFF_PAYMENT_SUCCESS_URL")
 SUBSCRIPTION_PRICE = os.environ.get("SUBSCRIPTION_PRICE")
 
 EMAIL_HOST = os.environ.get("EMAIL_HOST")
+EMAIL_PORT = os.environ.get("EMAIL_PORT")
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
-EMAIL_USE_TLS = True
+EMAIL_USE_SSL = True
