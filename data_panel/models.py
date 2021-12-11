@@ -92,7 +92,7 @@ class Item(models.Model):
     quantity = models.IntegerField(null=True, blank=True, verbose_name="Доступно")
     categories = models.ManyToManyField(Category, blank=True, verbose_name="Категории")
     quantity_of_purchased = models.IntegerField(null=True, blank=True, verbose_name="Количество покупок")
-    revenue = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, verbose_name="Выручка")
+    revenue = models.DecimalField(max_digits=35, decimal_places=2, null=True, blank=True, verbose_name="Выручка")
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

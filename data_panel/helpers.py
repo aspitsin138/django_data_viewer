@@ -2,6 +2,11 @@ import os
 from collections import defaultdict
 
 from data_panel.models import ItemUrl, Item
+from django.utils import timezone
+from datetime import timedelta
+
+_cache = None
+_cache_valid = timezone.now()
 
 
 def get_item_query():
@@ -9,7 +14,7 @@ def get_item_query():
 
     if use_sqlite:
         item_ids = []
-        for url in ItemUrl.objects.all():
+        for url in ItemUrl.objects.iterator(chunk_size=100):
             item_ids.append(url.item_set.latest('created_at').id)
         return Item.objects.filter(id__in=item_ids)
     else:
@@ -18,21 +23,27 @@ def get_item_query():
 
 
 def get_chart_data(rel_field: str, value_field: str, many_to_many=False) -> dict:
+    global _cache
+    global _cache_valid
+
+    if _cache and (_cache_valid > timezone.now()):
+        return _cache
+
     computed = defaultdict(float)
     fresh_items = get_item_query()
 
-    for item in fresh_items:
+    for item in fresh_items.iterator():
         value = getattr(item, value_field)
+        rel_model = getattr(item, rel_field)
 
-        if not value:
+        if (not value) or (not rel_model):
             continue
 
         if not many_to_many:
-            rel = getattr(item, rel_field)
-            computed[rel.name] += float(value)
+            computed[rel_model.name] += float(value)
             continue
 
-        for rel in getattr(item, rel_field).all():
+        for rel in rel_model.all():
             computed[rel.name] += float(value)
 
     raw_data = [*computed.items()]
@@ -46,8 +57,11 @@ def get_chart_data(rel_field: str, value_field: str, many_to_many=False) -> dict
 
     colors = ["#fe6383", "#3a9fed", "#4ec0b6", "#fd9c3b", "#fec95f", "#a264f5"]
 
-    return {
+    response = {
         "labels": labels,
         "values": data,
         "colors": colors[:len(data) - 1] + ["#c8cbda"]
     }
+    _cache = response
+    _cache_valid = timezone.now() + timedelta(hours=2)
+    return response
