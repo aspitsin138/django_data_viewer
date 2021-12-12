@@ -5,6 +5,8 @@ from data_panel.models import ItemUrl, Item
 from django.utils import timezone
 from datetime import timedelta
 
+from django.conf import settings
+
 _cache = None
 _cache_valid = timezone.now()
 
@@ -14,7 +16,7 @@ def get_item_query():
 
     if use_sqlite:
         item_ids = []
-        for url in ItemUrl.objects.iterator(chunk_size=100):
+        for url in ItemUrl.objects.iterator(chunk_size=settings.QUERYSET_CHUNK_SIZE):
             item_ids.append(url.item_set.latest('created_at').id)
         return Item.objects.filter(id__in=item_ids)
     else:
