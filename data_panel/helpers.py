@@ -1,7 +1,7 @@
 import os
-from collections import defaultdict
 
 from django.conf import settings
+from django.db.models import OuterRef, Sum
 
 from data_panel.models import ItemUrl, Item
 
@@ -19,38 +19,27 @@ def get_item_query():
         return Item.objects.filter(id__in=item_ids_query)
 
 
-def get_chart_data(rel_field: str, value_field: str, many_to_many=False) -> dict:
-    computed = defaultdict(float)
-    fresh_items = get_item_query()
+def get_chart_data(model, rel_field: str, field: str) -> dict:
+    items = get_item_query()
 
-    for item in fresh_items.iterator(chunk_size=settings.QUERYSET_CHUNK_SIZE):
-        value = getattr(item, value_field)
-        rel_model = getattr(item, rel_field)
+    item_query = items.filter(**dict(((rel_field, OuterRef('pk')),))).values(f'{rel_field}__pk')
+    field_sum_query = item_query.annotate(field_sum=Sum(field)).values("field_sum")
+    model_instances = model.objects.annotate(field_sum=field_sum_query).order_by(f"-field_sum")
 
-        if (not value) or (not rel_model):
-            continue
+    labels = []
+    values = []
+    colors = ["#fe6383", "#3a9fed", "#4ec0b6", "#fd9c3b", "#fec95f", "#a264f5", "#c8cbda"]
 
-        if not many_to_many:
-            computed[rel_model.name] += float(value)
-            continue
+    for instance in model_instances[:6]:
+        labels.append(instance.name)
+        values.append(float(instance.field_sum))
 
-        for rel in rel_model.iterator(chunk_size=settings.QUERYSET_CHUNK_SIZE):
-            computed[rel.name] += float(value)
+    if len(model_instances[6:]):
+        labels.append("Остальное")
+        values.append(float(model_instances[6:].aggregate(t=Sum('field_sum'))['t']))
 
-    raw_data = [*computed.items()]
-
-    sorted_data = sorted(raw_data, key=lambda x: -x[1])
-    labels = list(map(lambda x: x[0], sorted_data[:6]))
-    data = list(map(lambda x: x[1], sorted_data[:6]))
-
-    labels.append("Остальное")
-    data.append(sum([i[1] for i in sorted_data[6:]]))
-
-    colors = ["#fe6383", "#3a9fed", "#4ec0b6", "#fd9c3b", "#fec95f", "#a264f5"]
-
-    response = {
+    return {
         "labels": labels,
-        "values": data,
-        "colors": colors[:len(data) - 1] + ["#c8cbda"]
+        "values": values,
+        "colors": colors[:len(values)]
     }
-    return response

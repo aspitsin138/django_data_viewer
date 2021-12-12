@@ -1,6 +1,5 @@
 import re
 
-from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import F
@@ -64,9 +63,6 @@ class ItemListView(LoginRequiredMixin, SubscriptionRequiredMixin, FilterView):
             table_headers[order_field_index]["down"] = ordering != order_field
 
         context = super().get_context_data(**kwargs)
-        context['object_list'] = context['object_list'].iterator(
-            chunk_size=settings.QUERYSET_CHUNK_SIZE
-        )
         context['table_headers'] = table_headers
         return context
 

@@ -114,14 +114,14 @@ def add_goods(request):
 @login_required
 def categories_chart_data(request):
     return JsonResponse({
-        "chart1": get_chart_data("categories", "quantity_of_purchased", many_to_many=True),
-        "chart2": get_chart_data("categories", "revenue", many_to_many=True)
+        "chart1": get_chart_data(Category, "categories", "quantity_of_purchased"),
+        "chart2": get_chart_data(Category, "categories", "revenue")
     })
 
 
 @login_required
 def provider_chart_data(request):
     return JsonResponse({
-        "chart1": get_chart_data("provider", "quantity_of_purchased"),
-        "chart2": get_chart_data("provider", "revenue")
+        "chart1": get_chart_data(Provider, 'provider', "quantity_of_purchased"),
+        "chart2": get_chart_data(Provider, 'provider', "revenue")
     })
