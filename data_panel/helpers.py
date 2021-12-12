@@ -1,6 +1,5 @@
 import os
 
-from django.conf import settings
 from django.db.models import OuterRef, Sum
 
 from data_panel.models import ItemUrl, Item
@@ -11,7 +10,7 @@ def get_item_query():
 
     if use_sqlite:
         item_ids = []
-        for url in ItemUrl.objects.iterator(chunk_size=settings.QUERYSET_CHUNK_SIZE):
+        for url in ItemUrl.objects.iterator():
             item_ids.append(url.item_set.latest('created_at').id)
         return Item.objects.filter(id__in=item_ids)
     else:
